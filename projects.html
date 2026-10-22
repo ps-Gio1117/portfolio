@@ -26,32 +26,166 @@
       <div>
         <h2 id="calculator-project">Calculator</h2>
         <p>I coded a calculator that can do basic arithmetic operations.</p>
-        <p class="project-hint">Click the calculator to see my coding project.</p>
+        <p class="project-hint">Tap the keys to try it out.</p>
       </div>
-      <a class="calculator-link" href="https://www.google.com/search?q=calculator" aria-label="Open Google Calculator">
-        <svg class="calculator-art" viewBox="0 0 240 300" role="img" aria-labelledby="calculator-title calculator-description" xmlns="http://www.w3.org/2000/svg">
-          <title id="calculator-title">Calculator</title>
-          <desc id="calculator-description">A dark calculator with a green display and arithmetic keys.</desc>
-          <rect x="12" y="8" width="216" height="284" rx="28" fill="#101410" stroke="#b8ee74" stroke-width="3"/>
-          <rect x="32" y="30" width="176" height="66" rx="12" fill="#202a22" stroke="#ffffff" stroke-opacity=".16"/>
-          <text x="190" y="75" text-anchor="end" fill="#b8ee74" font-family="Space Grotesk, sans-serif" font-size="35">123</text>
-          <g fill="#202a22" stroke="#ffffff" stroke-opacity=".12" stroke-width="1.5">
-            <rect x="32" y="116" width="38" height="38" rx="10"/><rect x="78" y="116" width="38" height="38" rx="10"/><rect x="124" y="116" width="38" height="38" rx="10"/><rect x="170" y="116" width="38" height="38" rx="10"/>
-            <rect x="32" y="162" width="38" height="38" rx="10"/><rect x="78" y="162" width="38" height="38" rx="10"/><rect x="124" y="162" width="38" height="38" rx="10"/><rect x="170" y="162" width="38" height="38" rx="10"/>
-            <rect x="32" y="208" width="38" height="38" rx="10"/><rect x="78" y="208" width="38" height="38" rx="10"/><rect x="124" y="208" width="38" height="38" rx="10"/><rect x="170" y="208" width="38" height="38" rx="10"/>
-          </g>
-          <g fill="#f3f4eb" font-family="DM Sans, sans-serif" font-size="17" text-anchor="middle">
-            <text x="51" y="141">7</text><text x="97" y="141">8</text><text x="143" y="141">9</text><text x="189" y="141" fill="#b8ee74">÷</text>
-            <text x="51" y="187">4</text><text x="97" y="187">5</text><text x="143" y="187">6</text><text x="189" y="187" fill="#b8ee74">×</text>
-            <text x="51" y="233">1</text><text x="97" y="233">2</text><text x="143" y="233">3</text><text x="189" y="233" fill="#b8ee74">−</text>
-          </g>
-          <rect x="32" y="254" width="130" height="22" rx="9" fill="#b8ee74"/><rect x="170" y="254" width="38" height="22" rx="9" fill="#202a22" stroke="#ffffff" stroke-opacity=".12"/>
-          <text x="189" y="271" text-anchor="middle" fill="#b8ee74" font-family="DM Sans, sans-serif" font-size="17">+</text>
-        </svg>
-        <span class="calculator-cta">Open calculator <span aria-hidden="true">↗</span></span>
-      </a>
+      <div class="calculator" role="group" aria-label="Basic arithmetic calculator">
+        <div class="calculator-display">
+          <div class="calculator-expression" id="calculator-expression" aria-hidden="true"></div>
+          <output class="calculator-result" id="calculator-result" aria-live="polite" aria-atomic="true">0</output>
+        </div>
+        <div class="calculator-keys" id="calculator-keys">
+          <button class="calc-key calc-key-utility" type="button" data-action="clear" aria-label="Clear">AC</button>
+          <button class="calc-key calc-key-utility" type="button" data-action="backspace" aria-label="Delete last digit">⌫</button>
+          <button class="calc-key calc-key-operation" type="button" data-action="operator" data-value="/" aria-label="Divide">÷</button>
+          <button class="calc-key calc-key-operation" type="button" data-action="operator" data-value="*" aria-label="Multiply">×</button>
+          <button class="calc-key" type="button" data-action="digit" data-value="7">7</button>
+          <button class="calc-key" type="button" data-action="digit" data-value="8">8</button>
+          <button class="calc-key" type="button" data-action="digit" data-value="9">9</button>
+          <button class="calc-key calc-key-operation" type="button" data-action="operator" data-value="-" aria-label="Subtract">−</button>
+          <button class="calc-key" type="button" data-action="digit" data-value="4">4</button>
+          <button class="calc-key" type="button" data-action="digit" data-value="5">5</button>
+          <button class="calc-key" type="button" data-action="digit" data-value="6">6</button>
+          <button class="calc-key calc-key-operation" type="button" data-action="operator" data-value="+" aria-label="Add">+</button>
+          <button class="calc-key" type="button" data-action="digit" data-value="1">1</button>
+          <button class="calc-key" type="button" data-action="digit" data-value="2">2</button>
+          <button class="calc-key" type="button" data-action="digit" data-value="3">3</button>
+          <button class="calc-key calc-key-equals" type="button" data-action="equals" aria-label="Equals">=</button>
+          <button class="calc-key calc-key-zero" type="button" data-action="digit" data-value="0">0</button>
+          <button class="calc-key" type="button" data-action="decimal" aria-label="Decimal point">.</button>
+        </div>
+        <p class="calculator-note">You can also use your keyboard.</p>
+      </div>
     </section>
   </main>
   <footer class="site-footer"><p>© 2026 Giovani Capulin</p></footer>
+  <script>
+    (() => {
+      const keys = document.getElementById('calculator-keys');
+      const display = document.getElementById('calculator-result');
+      const expressionDisplay = document.getElementById('calculator-expression');
+      let tokens = [];
+      let enteringNumber = false;
+      let justCalculated = false;
+
+      const render = (result, expression = '') => {
+        display.textContent = result;
+        expressionDisplay.textContent = expression;
+      };
+      const format = number => Number.isFinite(number)
+        ? String(Number(number.toPrecision(12)))
+        : 'Error';
+
+      function calculate(items) {
+        const values = [];
+        const operators = [];
+        const precedence = op => (op === '+' || op === '-') ? 1 : 2;
+        for (const item of items) {
+          if (!['+', '-', '*', '/'].includes(item)) {
+            values.push(Number(item));
+            continue;
+          }
+          while (operators.length && precedence(operators.at(-1)) >= precedence(item)) {
+            const op = operators.pop();
+            const right = values.pop();
+            const left = values.pop();
+            values.push(op === '+' ? left + right : op === '-' ? left - right : op === '*' ? left * right : left / right);
+          }
+          operators.push(item);
+        }
+        while (operators.length) {
+          const op = operators.pop();
+          const right = values.pop();
+          const left = values.pop();
+          values.push(op === '+' ? left + right : op === '-' ? left - right : op === '*' ? left * right : left / right);
+        }
+        return values[0];
+      }
+
+      function press(action, value) {
+        if (action === 'clear') {
+          tokens = [];
+          enteringNumber = false;
+          justCalculated = false;
+          render('0');
+          return;
+        }
+        if (action === 'digit' || action === 'decimal') {
+          if (justCalculated) tokens = [];
+          justCalculated = false;
+          const last = tokens.length - 1;
+          if (action === 'decimal') {
+            if (enteringNumber && tokens[last].includes('.')) return;
+            if (!enteringNumber) {
+              tokens.push('0.');
+              enteringNumber = true;
+            } else {
+              tokens[last] += '.';
+            }
+          } else if (enteringNumber) {
+            tokens[last] = tokens[last] === '0' ? value : tokens[last] + value;
+          } else {
+            tokens.push(value);
+            enteringNumber = true;
+          }
+          render(tokens[last >= 0 && enteringNumber ? tokens.length - 1 : 0], tokens.filter((_, index) => index < tokens.length - (enteringNumber ? 1 : 0)).join(' '));
+          return;
+        }
+        if (action === 'operator') {
+          justCalculated = false;
+          if (!tokens.length) {
+            if (value === '-') tokens.push('0', '-');
+            else return;
+          } else if (['+', '-', '*', '/'].includes(tokens.at(-1))) {
+            tokens[tokens.length - 1] = value;
+          } else {
+            tokens.push(value);
+          }
+          enteringNumber = false;
+          render(display.textContent, tokens.join(' '));
+          return;
+        }
+        if (action === 'backspace') {
+          if (!enteringNumber || !tokens.length) return;
+          const current = tokens.at(-1).slice(0, -1);
+          if (!current || current === '-') {
+            tokens.pop();
+            enteringNumber = false;
+            render('0', tokens.join(' '));
+          } else {
+            tokens[tokens.length - 1] = current;
+            render(current, tokens.slice(0, -1).join(' '));
+          }
+          justCalculated = false;
+          return;
+        }
+        if (action === 'equals') {
+          if (!tokens.length || ['+', '-', '*', '/'].includes(tokens.at(-1))) return;
+          const expression = tokens.join(' ');
+          const answer = calculate(tokens);
+          const result = format(answer);
+          tokens = result === 'Error' ? [] : [result];
+          enteringNumber = false;
+          justCalculated = true;
+          render(result, `${expression} =`);
+        }
+      }
+
+      keys.addEventListener('click', event => {
+        const button = event.target.closest('button');
+        if (button) press(button.dataset.action, button.dataset.value);
+      });
+      keys.addEventListener('keydown', event => {
+        const digit = /^[0-9]$/.test(event.key);
+        if (digit) press('digit', event.key);
+        else if (event.key === '.') press('decimal');
+        else if (['+', '-', '*', '/'].includes(event.key)) press('operator', event.key);
+        else if (event.key === 'Enter' || event.key === '=') press('equals');
+        else if (event.key === 'Backspace') press('backspace');
+        else if (event.key === 'Escape') press('clear');
+        else return;
+        event.preventDefault();
+      });
+    })();
+  </script>
 </body>
 </html>
