@@ -325,21 +325,36 @@ h1 .highlight { color: var(--green); }
 .paint-app { padding: clamp(1rem, 4vw, 1.5rem); border: 1px solid var(--line); border-radius: 1rem; background: var(--surface-light); }
 .paint-controls { display: flex; flex-wrap: wrap; align-items: center; gap: 1rem; }
 .paint-control-group { display: flex; flex-wrap: wrap; gap: 0.45rem; }
-.paint-tool, .paint-action { min-height: 42px; padding: 0.55rem 0.85rem; border: 1px solid var(--line); border-radius: 0.65rem; background: var(--surface); color: var(--text); font: 600 0.88rem 'DM Sans', sans-serif; cursor: pointer; transition: border-color 160ms ease, background 160ms ease, color 160ms ease; }
+.paint-tool, .paint-action { min-height: 42px; padding: 0.55rem 0.85rem; border: 1px solid rgba(184, 238, 116, 0.32); border-radius: 0.65rem; background: var(--surface-light); color: var(--text); font: 600 0.88rem 'DM Sans', sans-serif; cursor: pointer; transition: border-color 160ms ease, background 160ms ease, color 160ms ease; }
 .paint-tool:hover, .paint-action:hover:not(:disabled) { border-color: var(--green); }
 .paint-tool[aria-pressed="true"] { border-color: var(--green); background: var(--green); color: var(--green-dark); }
-.paint-action:disabled { cursor: not-allowed; opacity: 0.45; }
+.paint-action:disabled { border-color: rgba(184, 238, 116, 0.2); background: rgba(184, 238, 116, 0.07); color: var(--muted); cursor: not-allowed; }
 .paint-colors { display: flex; flex-wrap: wrap; align-items: center; gap: 0.45rem; min-width: 0; margin: 0; padding: 0; border: 0; }
 .paint-colors legend { float: left; margin-right: 0.55rem; color: var(--muted); font-size: 0.82rem; font-weight: 600; }
-.paint-color { width: 1.7rem; height: 1.7rem; padding: 0; border: 2px solid rgba(255, 255, 255, 0.55); border-radius: 50%; background: var(--swatch); cursor: pointer; }
+.paint-color { display: grid; width: 1.9rem; height: 1.9rem; place-items: center; padding: 0; border: 0; border-radius: 50%; background: transparent; cursor: pointer; }
+.paint-color-chip { display: block; width: 1.55rem; height: 1.55rem; border: 2px solid rgba(255, 255, 255, 0.8); border-radius: 50%; box-shadow: 0 0 0 1px rgba(16, 20, 16, 0.6); }
 .paint-color[aria-pressed="true"] { outline: 2px solid var(--green); outline-offset: 2px; }
+.paint-custom-chip-button .paint-color-chip { border-style: dashed; }
+.paint-customizer { min-width: min(100%, 390px); margin: 0; padding: 0.7rem 0.85rem 0.85rem; border: 1px solid rgba(184, 238, 116, 0.26); border-radius: 0.8rem; background: rgba(16, 20, 16, 0.45); }
+.paint-customizer legend { padding-inline: 0.35rem; color: var(--green); font-size: 0.82rem; font-weight: 700; }
+.paint-custom-row { display: flex; flex-wrap: wrap; align-items: flex-end; gap: 0.8rem; }
+.paint-rgb-inputs, .paint-hex-input { display: flex; align-items: flex-end; gap: 0.4rem; }
+.paint-rgb-inputs label { display: grid; gap: 0.2rem; color: var(--muted); font-size: 0.72rem; }
+.paint-rgb-inputs input, .paint-hex-input input { min-height: 36px; padding: 0.35rem 0.45rem; border: 1px solid rgba(184, 238, 116, 0.32); border-radius: 0.45rem; background: var(--surface); color: var(--text); font: 500 0.85rem 'DM Sans', sans-serif; }
+.paint-rgb-inputs input { width: 3.6rem; }
+.paint-hex-input { align-items: center; }
+.paint-hex-input label { color: var(--muted); font-size: 0.75rem; font-weight: 700; }
+.paint-hex-input input { width: 6rem; text-transform: uppercase; }
+.paint-apply-color { min-height: 36px; padding: 0.4rem 0.6rem; border: 1px solid var(--green); border-radius: 0.45rem; background: var(--green); color: var(--green-dark); font: 700 0.76rem 'DM Sans', sans-serif; cursor: pointer; }
+.paint-apply-color:hover { background: #c8f58d; }
+.paint-custom-preview { width: 1.8rem; height: 1.8rem; margin-bottom: 0.25rem; border: 2px solid #fff; border-radius: 50%; box-shadow: 0 0 0 1px rgba(16, 20, 16, 0.6); }
 .paint-size { display: grid; min-width: 160px; gap: 0.25rem; color: var(--muted); font-size: 0.82rem; }
 .paint-size span { display: flex; justify-content: space-between; gap: 1rem; }
 .paint-size output { color: var(--text); font-variant-numeric: tabular-nums; }
 .paint-size input { width: 100%; accent-color: var(--green); cursor: pointer; }
 .paint-actions { margin-left: auto; }
-.paint-action { color: var(--muted); }
-.paint-download { border-color: var(--green); color: var(--green); }
+.paint-action { color: var(--green); }
+.paint-download { border-color: var(--green); background: var(--green); color: var(--green-dark); }
 .paint-stage { display: grid; place-items: center; margin-top: 1.25rem; padding: clamp(0.5rem, 2vw, 1rem); border: 1px dashed rgba(184, 238, 116, 0.28); border-radius: 1rem; background: var(--surface); }
 #paint-canvas { display: block; width: min(100%, 420px); height: auto; aspect-ratio: 1; border: 1px solid rgba(16, 20, 16, 0.25); border-radius: 0.45rem; background: #fff; touch-action: none; cursor: crosshair; }
 .paint-status { min-height: 1.5em; margin: 0.8rem 0 0; color: var(--muted); font-size: 0.82rem; }

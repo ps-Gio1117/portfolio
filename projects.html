@@ -111,13 +111,31 @@
           </div>
           <fieldset class="paint-colors">
             <legend>Color</legend>
-            <button class="paint-color" type="button" data-color="#b8ee74" style="--swatch: #b8ee74" aria-label="Green" aria-pressed="true"></button>
-            <button class="paint-color" type="button" data-color="#55d6be" style="--swatch: #55d6be" aria-label="Teal" aria-pressed="false"></button>
-            <button class="paint-color" type="button" data-color="#6ea8fe" style="--swatch: #6ea8fe" aria-label="Blue" aria-pressed="false"></button>
-            <button class="paint-color" type="button" data-color="#ffd166" style="--swatch: #ffd166" aria-label="Yellow" aria-pressed="false"></button>
-            <button class="paint-color" type="button" data-color="#ff7b72" style="--swatch: #ff7b72" aria-label="Coral" aria-pressed="false"></button>
-            <button class="paint-color" type="button" data-color="#d8a7ff" style="--swatch: #d8a7ff" aria-label="Purple" aria-pressed="false"></button>
-            <button class="paint-color" type="button" data-color="#202020" style="--swatch: #202020" aria-label="Black" aria-pressed="false"></button>
+            <button class="paint-color" type="button" data-color="#b8ee74" aria-label="Green" aria-pressed="true"><span class="paint-color-chip" style="background-color: #b8ee74"></span></button>
+            <button class="paint-color" type="button" data-color="#55d6be" aria-label="Teal" aria-pressed="false"><span class="paint-color-chip" style="background-color: #55d6be"></span></button>
+            <button class="paint-color" type="button" data-color="#6ea8fe" aria-label="Blue" aria-pressed="false"><span class="paint-color-chip" style="background-color: #6ea8fe"></span></button>
+            <button class="paint-color" type="button" data-color="#ffd166" aria-label="Yellow" aria-pressed="false"><span class="paint-color-chip" style="background-color: #ffd166"></span></button>
+            <button class="paint-color" type="button" data-color="#ff7b72" aria-label="Coral" aria-pressed="false"><span class="paint-color-chip" style="background-color: #ff7b72"></span></button>
+            <button class="paint-color" type="button" data-color="#d8a7ff" aria-label="Purple" aria-pressed="false"><span class="paint-color-chip" style="background-color: #d8a7ff"></span></button>
+            <button class="paint-color" type="button" data-color="#202020" aria-label="Black" aria-pressed="false"><span class="paint-color-chip" style="background-color: #202020"></span></button>
+            <button class="paint-color paint-custom-chip-button" id="paint-custom-color" type="button" data-color="#b8ee74" aria-label="Custom color" aria-pressed="false"><span class="paint-color-chip" id="paint-custom-chip" style="background-color: #b8ee74"></span></button>
+          </fieldset>
+          <fieldset class="paint-customizer">
+            <legend>Custom color</legend>
+            <div class="paint-custom-row">
+              <div class="paint-rgb-inputs" aria-label="RGB color values">
+                <label>R<input id="paint-red" type="number" min="0" max="255" value="184" inputmode="numeric" aria-label="Red value from 0 to 255"></label>
+                <label>G<input id="paint-green" type="number" min="0" max="255" value="238" inputmode="numeric" aria-label="Green value from 0 to 255"></label>
+                <label>B<input id="paint-blue" type="number" min="0" max="255" value="116" inputmode="numeric" aria-label="Blue value from 0 to 255"></label>
+                <button class="paint-apply-color" id="paint-use-rgb" type="button">Use RGB</button>
+              </div>
+              <div class="paint-hex-input">
+                <label for="paint-hex">HEX</label>
+                <input id="paint-hex" type="text" value="#B8EE74" maxlength="7" pattern="#[0-9A-Fa-f]{6}" autocomplete="off" spellcheck="false">
+                <button class="paint-apply-color" id="paint-use-hex" type="button">Use HEX</button>
+              </div>
+              <span class="paint-custom-preview" id="paint-custom-preview" role="img" aria-label="Custom color preview" style="background-color: #b8ee74"></span>
+            </div>
           </fieldset>
           <label class="paint-size" for="paint-size">
             <span>Brush size <output id="paint-size-value" for="paint-size">12</output></span>
@@ -430,6 +448,17 @@
       const context = canvas.getContext('2d', { willReadFrequently: true });
       const toolButtons = [...document.querySelectorAll('.paint-tool')];
       const colorButtons = [...document.querySelectorAll('.paint-color')];
+      const customColorButton = document.getElementById('paint-custom-color');
+      const customColorChip = document.getElementById('paint-custom-chip');
+      const customColorPreview = document.getElementById('paint-custom-preview');
+      const rgbInputs = [
+        document.getElementById('paint-red'),
+        document.getElementById('paint-green'),
+        document.getElementById('paint-blue')
+      ];
+      const hexInput = document.getElementById('paint-hex');
+      const useRgbButton = document.getElementById('paint-use-rgb');
+      const useHexButton = document.getElementById('paint-use-hex');
       const sizeSlider = document.getElementById('paint-size');
       const sizeOutput = document.getElementById('paint-size-value');
       const undoButton = document.getElementById('paint-undo');
@@ -467,6 +496,55 @@
 
       function updateStatus(message) {
         status.textContent = message;
+      }
+
+      function rgbToHex(values) {
+        return `#${values.map(value => value.toString(16).padStart(2, '0')).join('')}`;
+      }
+
+      function readRgbValues() {
+        if (rgbInputs.some(input => input.value.trim() === '')) return null;
+        const values = rgbInputs.map(input => Number(input.value));
+        return values.every(value => Number.isInteger(value) && value >= 0 && value <= 255) ? values : null;
+      }
+
+      function syncCustomFields(hex) {
+        const normalized = hex.toLowerCase();
+        const values = hexToRgba(normalized).slice(0, 3);
+        rgbInputs.forEach((input, index) => { input.value = values[index]; });
+        hexInput.value = normalized.toUpperCase();
+        customColorPreview.style.backgroundColor = normalized;
+        customColorChip.style.backgroundColor = normalized;
+        customColorButton.dataset.color = normalized;
+        customColorButton.setAttribute('aria-label', `Custom color ${normalized.toUpperCase()}`);
+      }
+
+      function setColor(hex, selectedButton) {
+        selectedColor = hex.toLowerCase();
+        colorButtons.forEach(button => button.setAttribute('aria-pressed', String(button === selectedButton)));
+        syncCustomFields(selectedColor);
+        updateStatus(`Paint color set to ${selectedColor.toUpperCase()}.`);
+      }
+
+      function updateCustomPreviewFromRgb() {
+        const values = readRgbValues();
+        if (!values) return;
+        const hex = rgbToHex(values);
+        hexInput.value = hex.toUpperCase();
+        customColorPreview.style.backgroundColor = hex;
+        customColorChip.style.backgroundColor = hex;
+        customColorButton.dataset.color = hex;
+        customColorButton.setAttribute('aria-label', `Custom color ${hex.toUpperCase()}`);
+      }
+
+      function updateCustomRgbFromHex() {
+        if (!/^#[0-9a-f]{6}$/i.test(hexInput.value)) return;
+        const values = hexToRgba(hexInput.value.toLowerCase()).slice(0, 3);
+        rgbInputs.forEach((input, index) => { input.value = values[index]; });
+        customColorPreview.style.backgroundColor = hexInput.value;
+        customColorChip.style.backgroundColor = hexInput.value;
+        customColorButton.dataset.color = hexInput.value.toLowerCase();
+        customColorButton.setAttribute('aria-label', `Custom color ${hexInput.value.toUpperCase()}`);
       }
 
       function chooseTool(tool) {
@@ -630,11 +708,24 @@
       canvas.addEventListener('lostpointercapture', stopDrawing);
 
       toolButtons.forEach(button => button.addEventListener('click', () => chooseTool(button.dataset.tool)));
-      colorButtons.forEach(button => button.addEventListener('click', () => {
-        selectedColor = button.dataset.color;
-        colorButtons.forEach(colorButton => colorButton.setAttribute('aria-pressed', String(colorButton === button)));
-        updateStatus(`Color selected. ${selectedColor.toUpperCase()}`);
-      }));
+      colorButtons.forEach(button => button.addEventListener('click', () => setColor(button.dataset.color, button)));
+      rgbInputs.forEach(input => input.addEventListener('input', updateCustomPreviewFromRgb));
+      hexInput.addEventListener('input', updateCustomRgbFromHex);
+      useRgbButton.addEventListener('click', () => {
+        const values = readRgbValues();
+        if (!values) {
+          updateStatus('Enter whole-number RGB values from 0 to 255.');
+          return;
+        }
+        setColor(rgbToHex(values), customColorButton);
+      });
+      useHexButton.addEventListener('click', () => {
+        if (!/^#[0-9a-f]{6}$/i.test(hexInput.value)) {
+          updateStatus('Enter a HEX color in the format #RRGGBB.');
+          return;
+        }
+        setColor(hexInput.value, customColorButton);
+      });
       sizeSlider.addEventListener('input', () => {
         brushSize = Number(sizeSlider.value);
         sizeOutput.value = brushSize;
@@ -646,6 +737,7 @@
       downloadButton.addEventListener('click', downloadCanvas);
 
       fillWhite();
+      syncCustomFields(selectedColor);
       updateHistoryButtons();
     })();
   </script>
