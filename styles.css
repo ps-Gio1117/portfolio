@@ -221,6 +221,8 @@ h1 .highlight { color: var(--green); }
   gap: 2rem;
 }
 
+.project-list { display: grid; gap: 1.5rem; margin-top: 2.25rem; }
+.project-list .content-panel { margin-top: 0; }
 .project-card h2 { margin-bottom: 0.7rem; font-size: 1.8rem; }
 .project-card p { color: var(--muted); }
 .project-card .project-hint { margin-top: 1.5rem; color: var(--green); font-size: 0.95rem; font-weight: 600; }
@@ -290,6 +292,29 @@ h1 .highlight { color: var(--green); }
 .calc-key-zero { grid-column: span 2; }
 .calculator-note { margin: 0.75rem 0 0; color: var(--muted); font-size: 0.75rem; text-align: center; }
 
+.memory-project h2 { margin-bottom: 0.55rem; font-size: 1.8rem; }
+.memory-project p { color: var(--muted); }
+.memory-intro { display: flex; align-items: flex-start; justify-content: space-between; gap: 1.5rem; }
+.memory-scores { display: grid; flex: 0 0 auto; gap: 0.55rem; min-width: 145px; padding: 0.75rem 1rem; border: 1px solid var(--line); border-radius: 0.8rem; background: var(--surface-light); }
+.memory-scores p { display: flex; justify-content: space-between; gap: 0.8rem; margin: 0; font-size: 0.82rem; }
+.memory-scores strong { color: var(--green); font-variant-numeric: tabular-nums; }
+.memory-game { display: grid; grid-template-columns: minmax(220px, 1fr) minmax(180px, 0.7fr); align-items: center; gap: clamp(1.25rem, 4vw, 2.5rem); margin-top: 1.5rem; padding: clamp(1rem, 4vw, 1.5rem); border: 1px solid var(--line); border-radius: 1rem; background: var(--surface-light); }
+.memory-board { display: grid; width: min(100%, 330px); justify-self: center; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 0.55rem; }
+.memory-square { aspect-ratio: 1; padding: 0; border: 1px solid rgba(184, 238, 116, 0.25); border-radius: 0.8rem; background: var(--surface); cursor: pointer; transition: background 180ms ease, box-shadow 180ms ease, transform 120ms ease, border-color 180ms ease; }
+.memory-square:hover:not(:disabled) { transform: scale(1.035); border-color: var(--green); }
+.memory-square:disabled { cursor: default; }
+.memory-square.is-lit { border-color: var(--green); background: var(--green); box-shadow: 0 0 1.5rem rgba(184, 238, 116, 0.5); }
+.memory-square.is-correct { border-color: var(--green); background: rgba(184, 238, 116, 0.48); box-shadow: 0 0 1rem rgba(184, 238, 116, 0.25); }
+.memory-controls { display: grid; justify-items: start; gap: 1rem; }
+.memory-status { min-height: 3.4em; margin: 0; color: var(--muted); }
+.memory-start { min-width: 120px; cursor: pointer; }
+.memory-start:disabled { cursor: wait; opacity: 0.7; }
+.memory-dialog { width: min(90vw, 380px); padding: 2rem; border: 1px solid rgba(184, 238, 116, 0.45); border-radius: 1.25rem; background: var(--surface); color: var(--text); text-align: center; box-shadow: 0 1.5rem 5rem rgba(0, 0, 0, 0.55); }
+.memory-dialog::backdrop { background: rgba(5, 8, 5, 0.78); backdrop-filter: blur(4px); }
+.memory-dialog h2 { margin-bottom: 0.6rem; color: var(--green); font-size: 2rem; }
+.memory-dialog p { margin-bottom: 1.4rem; color: var(--muted); }
+.memory-dialog .button { cursor: pointer; }
+
 .email-link { color: var(--green); text-decoration-thickness: 1px; text-underline-offset: 0.25em; }
 .email-link:hover { color: #d5ffac; }
 
@@ -314,6 +339,10 @@ h1 .highlight { color: var(--green); }
   .monogram { font-size: 4rem; }
   .project-card { grid-template-columns: 1fr; }
   .calculator { width: min(100%, 340px); justify-self: center; }
+  .memory-intro { flex-direction: column; }
+  .memory-scores { width: 100%; }
+  .memory-game { grid-template-columns: 1fr; }
+  .memory-controls { justify-items: center; text-align: center; }
 }
 
 @media (max-width: 430px) {

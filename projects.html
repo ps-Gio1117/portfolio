@@ -22,6 +22,7 @@
   <main id="main" class="page-content">
     <p class="eyebrow">Selected work</p>
     <h1>These are some of my projects.</h1>
+    <div class="project-list">
     <section class="content-panel project-card" aria-labelledby="calculator-project">
       <div>
         <h2 id="calculator-project">Calculator</h2>
@@ -56,6 +57,41 @@
         <p class="calculator-note">You can also use your keyboard.</p>
       </div>
     </section>
+    <section class="content-panel memory-project" aria-labelledby="memory-project-title">
+      <div class="memory-intro">
+        <div>
+          <h2 id="memory-project-title">Memory Test</h2>
+          <p>Watch the pattern, then repeat it. Each round adds one more square.</p>
+        </div>
+        <div class="memory-scores" aria-label="Game scores">
+          <p>Highest score <strong id="memory-high-score">0</strong></p>
+          <p>Current score <strong id="memory-current-score">0</strong></p>
+        </div>
+      </div>
+      <div class="memory-game" id="memory-game">
+        <div class="memory-board" id="memory-board" role="group" aria-label="Memory game squares">
+          <button class="memory-square" type="button" data-square="0" aria-label="Square 1" disabled></button>
+          <button class="memory-square" type="button" data-square="1" aria-label="Square 2" disabled></button>
+          <button class="memory-square" type="button" data-square="2" aria-label="Square 3" disabled></button>
+          <button class="memory-square" type="button" data-square="3" aria-label="Square 4" disabled></button>
+          <button class="memory-square" type="button" data-square="4" aria-label="Square 5" disabled></button>
+          <button class="memory-square" type="button" data-square="5" aria-label="Square 6" disabled></button>
+          <button class="memory-square" type="button" data-square="6" aria-label="Square 7" disabled></button>
+          <button class="memory-square" type="button" data-square="7" aria-label="Square 8" disabled></button>
+          <button class="memory-square" type="button" data-square="8" aria-label="Square 9" disabled></button>
+        </div>
+        <div class="memory-controls">
+          <p class="memory-status" id="memory-status" aria-live="polite">Press Start when you're ready.</p>
+          <button class="button button-primary memory-start" id="memory-start" type="button">Start</button>
+        </div>
+      </div>
+    </section>
+    </div>
+    <dialog class="memory-dialog" id="memory-dialog" aria-labelledby="memory-dialog-title">
+      <h2 id="memory-dialog-title">Nice try!</h2>
+      <p id="memory-final-score">Your score: 0</p>
+      <button class="button button-primary" id="memory-restart" type="button">Try again?</button>
+    </dialog>
   </main>
   <footer class="site-footer"><p>© 2026 Giovani Capulin</p></footer>
   <script>
@@ -185,6 +221,119 @@
         else return;
         event.preventDefault();
       });
+    })();
+  </script>
+  <script>
+    (() => {
+      const board = document.getElementById('memory-board');
+      const squares = [...board.querySelectorAll('.memory-square')];
+      const startButton = document.getElementById('memory-start');
+      const status = document.getElementById('memory-status');
+      const currentScore = document.getElementById('memory-current-score');
+      const highScore = document.getElementById('memory-high-score');
+      const dialog = document.getElementById('memory-dialog');
+      const finalScore = document.getElementById('memory-final-score');
+      const restartButton = document.getElementById('memory-restart');
+      const scoreKey = 'giovani-portfolio-memory-high-score';
+      const flashDuration = 430;
+      const stepDuration = 760;
+      let sequence = [];
+      let inputIndex = 0;
+      let acceptingInput = false;
+      let roundTimers = [];
+      let best = 0;
+
+      try {
+        best = Number(localStorage.getItem(scoreKey)) || 0;
+      } catch { /* Keep playing if browser storage is unavailable. */ }
+      highScore.textContent = best;
+
+      function clearTimers() {
+        roundTimers.forEach(clearTimeout);
+        roundTimers = [];
+        squares.forEach(square => square.classList.remove('is-lit', 'is-correct'));
+      }
+
+      function flash(index, className = 'is-lit') {
+        const square = squares[index];
+        square.classList.add(className);
+        roundTimers.push(setTimeout(() => square.classList.remove(className), flashDuration));
+      }
+
+      function playRound() {
+        acceptingInput = false;
+        inputIndex = 0;
+        squares.forEach(square => { square.disabled = true; });
+        board.classList.add('is-watching');
+        status.textContent = 'Watch the pattern.';
+        sequence.forEach((squareIndex, step) => {
+          roundTimers.push(setTimeout(() => flash(squareIndex), step * stepDuration));
+        });
+        roundTimers.push(setTimeout(() => {
+          board.classList.remove('is-watching');
+          acceptingInput = true;
+          squares.forEach(square => { square.disabled = false; });
+          status.textContent = 'Your turn! Repeat the pattern.';
+        }, sequence.length * stepDuration));
+      }
+
+      function beginRound() {
+        sequence.push(Math.floor(Math.random() * squares.length));
+        playRound();
+      }
+
+      function startGame() {
+        if (dialog.open) dialog.close();
+        clearTimers();
+        sequence = [];
+        currentScore.textContent = '0';
+        startButton.disabled = true;
+        startButton.textContent = 'Playing…';
+        squares.forEach(square => { square.disabled = false; });
+        beginRound();
+      }
+
+      function endGame() {
+        acceptingInput = false;
+        clearTimers();
+        board.classList.remove('is-watching');
+        startButton.disabled = false;
+        startButton.textContent = 'Start';
+        squares.forEach(square => { square.disabled = true; });
+        status.textContent = 'Game over. Start again whenever you’re ready.';
+        finalScore.textContent = `Your score: ${currentScore.textContent}`;
+        dialog.showModal();
+      }
+
+      function handleSquareClick(event) {
+        const square = event.target.closest('.memory-square');
+        if (!square || !acceptingInput) return;
+        const selected = Number(square.dataset.square);
+        if (selected !== sequence[inputIndex]) {
+          endGame();
+          return;
+        }
+        flash(selected, 'is-correct');
+        inputIndex += 1;
+        if (inputIndex === sequence.length) {
+          acceptingInput = false;
+          clearTimers();
+          const score = sequence.length;
+          currentScore.textContent = score;
+          if (score > best) {
+            best = score;
+            highScore.textContent = best;
+            try { localStorage.setItem(scoreKey, String(best)); } catch { /* Score remains for this visit. */ }
+          }
+          status.textContent = 'Nice! Get ready for the next round.';
+          roundTimers.push(setTimeout(beginRound, 850));
+        }
+      }
+
+      startButton.addEventListener('click', startGame);
+      restartButton.addEventListener('click', startGame);
+      board.addEventListener('click', handleSquareClick);
+      dialog.addEventListener('cancel', event => event.preventDefault());
     })();
   </script>
 </body>
