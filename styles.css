@@ -292,6 +292,7 @@ h1 .highlight { color: var(--green); }
 .calc-key-zero { grid-column: span 2; }
 .calculator-note { margin: 0.75rem 0 0; color: var(--muted); font-size: 0.75rem; text-align: center; }
 
+.memory-project { position: relative; }
 .memory-project h2 { margin-bottom: 0.55rem; font-size: 1.8rem; }
 .memory-project p { color: var(--muted); }
 .memory-intro { display: flex; align-items: flex-start; justify-content: space-between; gap: 1.5rem; }
@@ -309,11 +310,15 @@ h1 .highlight { color: var(--green); }
 .memory-status { min-height: 3.4em; margin: 0; color: var(--muted); }
 .memory-start { min-width: 120px; cursor: pointer; }
 .memory-start:disabled { cursor: wait; opacity: 0.7; }
-.memory-dialog { width: min(90vw, 380px); padding: 2rem; border: 1px solid rgba(184, 238, 116, 0.45); border-radius: 1.25rem; background: var(--surface); color: var(--text); text-align: center; box-shadow: 0 1.5rem 5rem rgba(0, 0, 0, 0.55); }
-.memory-dialog::backdrop { background: rgba(5, 8, 5, 0.78); backdrop-filter: blur(4px); }
+.memory-dialog { position: absolute; z-index: 3; inset: 0; display: grid; place-items: center; padding: 1rem; border-radius: 1.25rem; background: rgba(16, 20, 16, 0.88); backdrop-filter: blur(4px); }
+.memory-dialog[hidden] { display: none; }
+.memory-dialog-card { position: relative; width: min(100%, 360px); padding: 2rem 1.5rem 1.5rem; border: 1px solid rgba(184, 238, 116, 0.45); border-radius: 1.25rem; background: var(--surface); color: var(--text); text-align: center; box-shadow: 0 1.5rem 5rem rgba(0, 0, 0, 0.55); }
 .memory-dialog h2 { margin-bottom: 0.6rem; color: var(--green); font-size: 2rem; }
 .memory-dialog p { margin-bottom: 1.4rem; color: var(--muted); }
-.memory-dialog .button { cursor: pointer; }
+.memory-dialog-close { position: absolute; top: 0.5rem; right: 0.55rem; display: grid; width: 2.1rem; height: 2.1rem; place-items: center; border: 1px solid var(--line); border-radius: 50%; background: var(--surface-light); color: var(--text); font: 500 1.4rem/1 'DM Sans', sans-serif; cursor: pointer; }
+.memory-dialog-close:hover { border-color: var(--green); color: var(--green); }
+.memory-restart { display: inline-flex; gap: 0.55rem; cursor: pointer; }
+.memory-restart svg { width: 1.15rem; height: 1.15rem; fill: none; stroke: currentColor; stroke-linecap: round; stroke-linejoin: round; stroke-width: 1.8; }
 
 .email-link { color: var(--green); text-decoration-thickness: 1px; text-underline-offset: 0.25em; }
 .email-link:hover { color: #d5ffac; }

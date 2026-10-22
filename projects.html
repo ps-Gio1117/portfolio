@@ -81,17 +81,23 @@
           <button class="memory-square" type="button" data-square="8" aria-label="Square 9" disabled></button>
         </div>
         <div class="memory-controls">
-          <p class="memory-status" id="memory-status" aria-live="polite">Press Start when you're ready.</p>
+          <p class="memory-status" id="memory-status" tabindex="-1" aria-live="polite">Press Start when you're ready.</p>
           <button class="button button-primary memory-start" id="memory-start" type="button">Start</button>
+        </div>
+      </div>
+      <div class="memory-dialog" id="memory-dialog" role="dialog" aria-modal="true" aria-labelledby="memory-dialog-title" hidden>
+        <div class="memory-dialog-card">
+          <button class="memory-dialog-close" id="memory-close" type="button" aria-label="Close and reset game">×</button>
+          <h2 id="memory-dialog-title">Nice try!</h2>
+          <p id="memory-final-score">Your score: 0</p>
+          <button class="button button-primary memory-restart" id="memory-restart" type="button">
+            <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M20 7v5h-5M19 12a7 7 0 1 1-2-4.9L20 12"/></svg>
+            <span>Try again?</span>
+          </button>
         </div>
       </div>
     </section>
     </div>
-    <dialog class="memory-dialog" id="memory-dialog" aria-labelledby="memory-dialog-title">
-      <h2 id="memory-dialog-title">Nice try!</h2>
-      <p id="memory-final-score">Your score: 0</p>
-      <button class="button button-primary" id="memory-restart" type="button">Try again?</button>
-    </dialog>
   </main>
   <footer class="site-footer"><p>© 2026 Giovani Capulin</p></footer>
   <script>
@@ -232,6 +238,7 @@
       const currentScore = document.getElementById('memory-current-score');
       const highScore = document.getElementById('memory-high-score');
       const dialog = document.getElementById('memory-dialog');
+      const closeButton = document.getElementById('memory-close');
       const finalScore = document.getElementById('memory-final-score');
       const restartButton = document.getElementById('memory-restart');
       const scoreKey = 'giovani-portfolio-memory-high-score';
@@ -254,10 +261,18 @@
         squares.forEach(square => square.classList.remove('is-lit', 'is-correct'));
       }
 
+      function schedule(callback, delay) {
+        const timer = setTimeout(() => {
+          roundTimers = roundTimers.filter(activeTimer => activeTimer !== timer);
+          callback();
+        }, delay);
+        roundTimers.push(timer);
+      }
+
       function flash(index, className = 'is-lit') {
         const square = squares[index];
         square.classList.add(className);
-        roundTimers.push(setTimeout(() => square.classList.remove(className), flashDuration));
+        schedule(() => square.classList.remove(className), flashDuration);
       }
 
       function playRound() {
@@ -267,14 +282,14 @@
         board.classList.add('is-watching');
         status.textContent = 'Watch the pattern.';
         sequence.forEach((squareIndex, step) => {
-          roundTimers.push(setTimeout(() => flash(squareIndex), step * stepDuration));
+          schedule(() => flash(squareIndex), step * stepDuration);
         });
-        roundTimers.push(setTimeout(() => {
+        schedule(() => {
           board.classList.remove('is-watching');
           acceptingInput = true;
           squares.forEach(square => { square.disabled = false; });
           status.textContent = 'Your turn! Repeat the pattern.';
-        }, sequence.length * stepDuration));
+        }, sequence.length * stepDuration);
       }
 
       function beginRound() {
@@ -283,7 +298,7 @@
       }
 
       function startGame() {
-        if (dialog.open) dialog.close();
+        dialog.hidden = true;
         clearTimers();
         sequence = [];
         currentScore.textContent = '0';
@@ -291,6 +306,22 @@
         startButton.textContent = 'Playing…';
         squares.forEach(square => { square.disabled = false; });
         beginRound();
+        status.focus();
+      }
+
+      function resetGame() {
+        clearTimers();
+        sequence = [];
+        inputIndex = 0;
+        acceptingInput = false;
+        currentScore.textContent = '0';
+        startButton.disabled = false;
+        startButton.textContent = 'Start';
+        squares.forEach(square => { square.disabled = true; });
+        board.classList.remove('is-watching');
+        status.textContent = "Press Start when you're ready.";
+        dialog.hidden = true;
+        startButton.focus();
       }
 
       function endGame() {
@@ -302,7 +333,8 @@
         squares.forEach(square => { square.disabled = true; });
         status.textContent = 'Game over. Start again whenever you’re ready.';
         finalScore.textContent = `Your score: ${currentScore.textContent}`;
-        dialog.showModal();
+        dialog.hidden = false;
+        restartButton.focus();
       }
 
       function handleSquareClick(event) {
@@ -317,7 +349,6 @@
         inputIndex += 1;
         if (inputIndex === sequence.length) {
           acceptingInput = false;
-          clearTimers();
           const score = sequence.length;
           currentScore.textContent = score;
           if (score > best) {
@@ -326,14 +357,30 @@
             try { localStorage.setItem(scoreKey, String(best)); } catch { /* Score remains for this visit. */ }
           }
           status.textContent = 'Nice! Get ready for the next round.';
-          roundTimers.push(setTimeout(beginRound, 850));
+          schedule(beginRound, 850);
         }
       }
 
       startButton.addEventListener('click', startGame);
       restartButton.addEventListener('click', startGame);
+      closeButton.addEventListener('click', resetGame);
       board.addEventListener('click', handleSquareClick);
-      dialog.addEventListener('cancel', event => event.preventDefault());
+      dialog.addEventListener('keydown', event => {
+        if (event.key === 'Escape') {
+          event.preventDefault();
+          resetGame();
+        } else if (event.key === 'Tab') {
+          const first = closeButton;
+          const last = restartButton;
+          if (event.shiftKey && document.activeElement === first) {
+            event.preventDefault();
+            last.focus();
+          } else if (!event.shiftKey && document.activeElement === last) {
+            event.preventDefault();
+            first.focus();
+          }
+        }
+      });
     })();
   </script>
 </body>
