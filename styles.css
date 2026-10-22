@@ -214,6 +214,34 @@ h1 .highlight { color: var(--green); }
   text-align: center;
 }
 
+.project-card {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(180px, 240px);
+  align-items: center;
+  gap: 2rem;
+}
+
+.project-card h2 { margin-bottom: 0.7rem; font-size: 1.8rem; }
+.project-card p { color: var(--muted); }
+.project-card .project-hint { margin-top: 1.5rem; color: var(--green); font-size: 0.95rem; font-weight: 600; }
+
+.calculator-link {
+  display: grid;
+  justify-items: center;
+  gap: 0.9rem;
+  padding: 1rem;
+  border: 1px solid var(--line);
+  border-radius: 1rem;
+  background: var(--surface-light);
+  text-align: center;
+  text-decoration: none;
+  transition: transform 160ms ease, border-color 160ms ease, box-shadow 160ms ease;
+}
+
+.calculator-link:hover { transform: translateY(-3px); border-color: var(--green); box-shadow: 0 0 1.5rem rgba(184, 238, 116, 0.12); }
+.calculator-art { display: block; width: min(100%, 180px); height: auto; }
+.calculator-cta { color: var(--green); font-size: 0.9rem; font-weight: 700; }
+
 .email-link { color: var(--green); text-decoration-thickness: 1px; text-underline-offset: 0.25em; }
 .email-link:hover { color: #d5ffac; }
 
@@ -236,6 +264,8 @@ h1 .highlight { color: var(--green); }
   .hero { min-height: auto; grid-template-columns: 1fr; gap: 2.5rem; padding-block: 5rem; }
   .hero-card { min-height: 220px; }
   .monogram { font-size: 4rem; }
+  .project-card { grid-template-columns: 1fr; }
+  .calculator-link { width: min(100%, 280px); justify-self: center; }
 }
 
 @media (max-width: 430px) {
