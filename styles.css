@@ -310,13 +310,13 @@ h1 .highlight { color: var(--green); }
 .memory-status { min-height: 3.4em; margin: 0; color: var(--muted); }
 .memory-start { min-width: 120px; cursor: pointer; }
 .memory-start:disabled { cursor: wait; opacity: 0.7; }
-.memory-dialog { position: absolute; z-index: 3; inset: 0; display: grid; place-items: center; padding: 1rem; border-radius: 1.25rem; background: rgba(16, 20, 16, 0.88); backdrop-filter: blur(4px); }
+.memory-dialog { position: absolute; z-index: 3; inset: 0; display: flex; align-items: center; justify-content: center; padding: 1rem; border-radius: 1.25rem; background: rgba(16, 20, 16, 0.88); backdrop-filter: blur(4px); }
 .memory-dialog[hidden] { display: none; }
-.memory-dialog-card { position: relative; width: min(100%, 360px); padding: 2rem 1.5rem 1.5rem; border: 1px solid rgba(184, 238, 116, 0.45); border-radius: 1.25rem; background: var(--surface); color: var(--text); text-align: center; box-shadow: 0 1.5rem 5rem rgba(0, 0, 0, 0.55); }
+.memory-dialog-card { position: relative; width: min(100%, 360px); margin: auto; padding: 2rem 1.5rem 1.5rem; border: 1px solid rgba(184, 238, 116, 0.45); border-radius: 1.25rem; background: var(--surface); color: var(--text); text-align: center; box-shadow: 0 1.5rem 5rem rgba(0, 0, 0, 0.55); }
 .memory-dialog h2 { margin-bottom: 0.6rem; color: var(--green); font-size: 2rem; }
 .memory-dialog p { margin-bottom: 1.4rem; color: var(--muted); }
-.memory-dialog-close { position: absolute; top: 0.5rem; right: 0.55rem; display: grid; width: 2.1rem; height: 2.1rem; place-items: center; border: 1px solid var(--line); border-radius: 50%; background: var(--surface-light); color: var(--text); font: 500 1.4rem/1 'DM Sans', sans-serif; cursor: pointer; }
-.memory-dialog-close:hover { border-color: var(--green); color: var(--green); }
+.memory-dialog-close { position: absolute; top: 0.5rem; right: 0.55rem; display: grid; width: 2.1rem; height: 2.1rem; place-items: center; border: 1px solid var(--green); border-radius: 50%; background: var(--green); color: var(--green-dark); font: 700 1.4rem/1 'DM Sans', sans-serif; cursor: pointer; transition: background 160ms ease, transform 160ms ease; }
+.memory-dialog-close:hover { transform: scale(1.06); background: #c8f58d; }
 .memory-restart { display: inline-flex; gap: 0.55rem; cursor: pointer; }
 .memory-restart svg { width: 1.15rem; height: 1.15rem; fill: none; stroke: currentColor; stroke-linecap: round; stroke-linejoin: round; stroke-width: 1.8; }
 
