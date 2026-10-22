@@ -1,0 +1,54 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Ten favicon options for Giovani Capulin's portfolio.">
+  <title>Favicon Options | Giovani Capulin</title>
+  <link rel="stylesheet" href="styles.css">
+  <style>
+    .favicon-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 1rem; margin-top: 2rem; }
+    .favicon-option { margin: 0; padding: 1.25rem; border: 1px solid var(--line); border-radius: 1rem; background: var(--surface); }
+    .favicon-option h2 { margin-bottom: 1rem; font-size: 1.1rem; }
+    .favicon-previews { display: flex; min-height: 110px; align-items: center; justify-content: center; gap: 2rem; margin-bottom: 0.9rem; border: 1px dashed var(--line); border-radius: 0.75rem; background: #f3f4eb; }
+    .favicon-previews img { image-rendering: auto; }
+    .favicon-option figcaption { color: var(--muted); font-size: 0.85rem; }
+    .favicon-usage { margin-top: 2rem; padding: 1.25rem; border: 1px solid var(--line); border-radius: 1rem; background: var(--surface); color: var(--muted); }
+    .favicon-usage code { display: block; overflow-wrap: anywhere; margin-top: 0.6rem; color: var(--green); }
+    @media (max-width: 430px) { .favicon-grid { grid-template-columns: 1fr; } }
+  </style>
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to content</a>
+  <header class="site-header">
+    <a class="brand" href="index.html">GC<span>.</span></a>
+    <nav class="nav-links" aria-label="Main navigation">
+      <a href="index.html">Home</a>
+      <a href="projects.html">Projects</a>
+    </nav>
+  </header>
+  <main id="main" class="page-content">
+    <p class="eyebrow">Portfolio branding</p>
+    <h1>Favicon options</h1>
+    <p class="lead">Ten small icon ideas using the portfolio's dark green and lime palette. Each option is shown at 32 pixels and 96 pixels.</p>
+    <div class="favicon-grid">
+      <figure class="favicon-option"><h2>01 · Monogram</h2><div class="favicon-previews"><img src="favicons/favicon-01.svg" width="32" height="32" alt=""><img src="favicons/favicon-01.svg" width="96" height="96" alt=""></div><figcaption>GC letters with a small accent dot.</figcaption></figure>
+      <figure class="favicon-option"><h2>02 · Lime badge</h2><div class="favicon-previews"><img src="favicons/favicon-02.svg" width="32" height="32" alt=""><img src="favicons/favicon-02.svg" width="96" height="96" alt=""></div><figcaption>Dark initials inside a bright green circle.</figcaption></figure>
+      <figure class="favicon-option"><h2>03 · Outlined tile</h2><div class="favicon-previews"><img src="favicons/favicon-03.svg" width="32" height="32" alt=""><img src="favicons/favicon-03.svg" width="96" height="96" alt=""></div><figcaption>Light initials in a lime framed square.</figcaption></figure>
+      <figure class="favicon-option"><h2>04 · Rings</h2><div class="favicon-previews"><img src="favicons/favicon-04.svg" width="32" height="32" alt=""><img src="favicons/favicon-04.svg" width="96" height="96" alt=""></div><figcaption>GC inside concentric green rings.</figcaption></figure>
+      <figure class="favicon-option"><h2>05 · Framed initials</h2><div class="favicon-previews"><img src="favicons/favicon-05.svg" width="32" height="32" alt=""><img src="favicons/favicon-05.svg" width="96" height="96" alt=""></div><figcaption>Bold initials on a lime tile.</figcaption></figure>
+      <figure class="favicon-option"><h2>06 · G mark</h2><div class="favicon-previews"><img src="favicons/favicon-06.svg" width="32" height="32" alt=""><img src="favicons/favicon-06.svg" width="96" height="96" alt=""></div><figcaption>A simplified G shape with a light accent.</figcaption></figure>
+      <figure class="favicon-option"><h2>07 · Pixel tiles</h2><div class="favicon-previews"><img src="favicons/favicon-07.svg" width="32" height="32" alt=""><img src="favicons/favicon-07.svg" width="96" height="96" alt=""></div><figcaption>A compact four tile geometric mark.</figcaption></figure>
+      <figure class="favicon-option"><h2>08 · Circle monogram</h2><div class="favicon-previews"><img src="favicons/favicon-08.svg" width="32" height="32" alt=""><img src="favicons/favicon-08.svg" width="96" height="96" alt=""></div><figcaption>GC initials, ring, and a green dot.</figcaption></figure>
+      <figure class="favicon-option"><h2>09 · Shield</h2><div class="favicon-previews"><img src="favicons/favicon-09.svg" width="32" height="32" alt=""><img src="favicons/favicon-09.svg" width="96" height="96" alt=""></div><figcaption>A framed monogram in a simple shield.</figcaption></figure>
+      <figure class="favicon-option"><h2>10 · Lines</h2><div class="favicon-previews"><img src="favicons/favicon-10.svg" width="32" height="32" alt=""><img src="favicons/favicon-10.svg" width="96" height="96" alt=""></div><figcaption>A clean monogram between accent lines.</figcaption></figure>
+    </div>
+    <div class="favicon-usage">
+      To use an option, add its link inside the page's <code>&lt;head&gt;</code>. For example, option 01:
+      <code>&lt;link rel="icon" type="image/svg+xml" href="favicons/favicon-01.svg"&gt;</code>
+    </div>
+    <p style="margin-top: 1.5rem"><a class="email-link" href="index.html">Return to the portfolio home page</a></p>
+  </main>
+  <footer class="site-footer"><p>© 2026 Giovani Capulin</p></footer>
+</body>
+</html>
