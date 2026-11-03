@@ -146,7 +146,6 @@
             <button class="paint-action" id="paint-undo" type="button" aria-label="Undo" disabled>Undo</button>
             <button class="paint-action" id="paint-redo" type="button" aria-label="Redo" disabled>Redo</button>
             <button class="paint-action" id="paint-reset" type="button">Reset</button>
-            <button class="paint-action paint-download" id="paint-download" type="button">Download PNG</button>
             <button class="paint-action paint-download" id="paint-download-jpeg" type="button">Download JPEG</button>
           </div>
         </div>
@@ -466,7 +465,6 @@
       const undoButton = document.getElementById('paint-undo');
       const redoButton = document.getElementById('paint-redo');
       const resetButton = document.getElementById('paint-reset');
-      const downloadButton = document.getElementById('paint-download');
       const jpegDownloadButton = document.getElementById('paint-download-jpeg');
       const status = document.getElementById('paint-status');
       const history = [];
@@ -662,7 +660,7 @@
         updateStatus('Canvas reset. Use Undo to restore your drawing.');
       }
 
-      function downloadCanvas(format) {
+      function downloadCanvas() {
         canvas.toBlob(blob => {
           if (!blob) {
             updateStatus('Could not create the image. Try again.');
@@ -671,12 +669,11 @@
           const url = URL.createObjectURL(blob);
           const link = document.createElement('a');
           link.href = url;
-          const extension = format === 'jpeg' ? 'jpg' : 'png';
-          link.download = `my-painting.${extension}`;
+          link.download = 'my-painting.jpg';
           link.click();
           setTimeout(() => URL.revokeObjectURL(url), 1000);
-          updateStatus(`Your painting was downloaded as a ${format.toUpperCase()}.`);
-        }, format === 'jpeg' ? 'image/jpeg' : 'image/png', format === 'jpeg' ? 0.92 : undefined);
+          updateStatus('Your painting was downloaded as a JPEG.');
+        }, 'image/jpeg', 0.92);
       }
 
       canvas.addEventListener('pointerdown', event => {
@@ -738,8 +735,7 @@
       undoButton.addEventListener('click', undo);
       redoButton.addEventListener('click', redo);
       resetButton.addEventListener('click', resetCanvas);
-      downloadButton.addEventListener('click', () => downloadCanvas('png'));
-      jpegDownloadButton.addEventListener('click', () => downloadCanvas('jpeg'));
+      jpegDownloadButton.addEventListener('click', downloadCanvas);
 
       fillWhite();
       syncCustomFields(selectedColor);
