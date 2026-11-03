@@ -10,6 +10,8 @@
   --green: #b8ee74;
   --green-dark: #17250d;
   --line: rgba(231, 242, 224, 0.13);
+  --accent-hover: #c8f58d;
+  --link-hover: #d5ffac;
 }
 
 * { box-sizing: border-box; }
@@ -151,7 +153,7 @@ h1 .highlight { color: var(--green); }
 
 .button:hover { transform: translateY(-2px); border-color: var(--green); }
 .button-primary { border-color: var(--green); background: var(--green); color: var(--green-dark); }
-.button-primary:hover { background: #c8f58d; }
+.button-primary:hover { background: var(--accent-hover); }
 
 .hero-card {
   position: relative;
@@ -316,7 +318,7 @@ h1 .highlight { color: var(--green); }
 .memory-dialog h2 { margin-bottom: 0.6rem; color: var(--green); font-size: 2rem; }
 .memory-dialog p { margin-bottom: 1.4rem; color: var(--muted); }
 .memory-dialog-close { position: absolute; top: 0.5rem; right: 0.55rem; display: grid; width: 2.1rem; height: 2.1rem; place-items: center; border: 1px solid var(--green); border-radius: 50%; background: var(--green); color: var(--green-dark); font: 700 1.4rem/1 'DM Sans', sans-serif; cursor: pointer; transition: background 160ms ease, transform 160ms ease; }
-.memory-dialog-close:hover { transform: scale(1.06); background: #c8f58d; }
+.memory-dialog-close:hover { transform: scale(1.06); background: var(--accent-hover); }
 .memory-restart { display: inline-flex; gap: 0.55rem; cursor: pointer; }
 .memory-restart svg { width: 1.15rem; height: 1.15rem; fill: none; stroke: currentColor; stroke-linecap: round; stroke-linejoin: round; stroke-width: 1.8; }
 
@@ -346,7 +348,7 @@ h1 .highlight { color: var(--green); }
 .paint-hex-input label { color: var(--muted); font-size: 0.75rem; font-weight: 700; }
 .paint-hex-input input { width: 6rem; text-transform: uppercase; }
 .paint-apply-color { min-height: 36px; padding: 0.4rem 0.6rem; border: 1px solid var(--green); border-radius: 0.45rem; background: var(--green); color: var(--green-dark); font: 700 0.76rem 'DM Sans', sans-serif; cursor: pointer; }
-.paint-apply-color:hover { background: #c8f58d; }
+.paint-apply-color:hover { background: var(--accent-hover); }
 .paint-custom-preview { width: 1.8rem; height: 1.8rem; margin-bottom: 0.25rem; border: 2px solid #fff; border-radius: 50%; box-shadow: 0 0 0 1px rgba(16, 20, 16, 0.6); }
 .paint-size { display: grid; min-width: 160px; gap: 0.25rem; color: var(--muted); font-size: 0.82rem; }
 .paint-size span { display: flex; justify-content: space-between; gap: 1rem; }
@@ -360,7 +362,7 @@ h1 .highlight { color: var(--green); }
 .paint-status { min-height: 1.5em; margin: 0.8rem 0 0; color: var(--muted); font-size: 0.82rem; }
 
 .email-link { color: var(--green); text-decoration-thickness: 1px; text-underline-offset: 0.25em; }
-.email-link:hover { color: #d5ffac; }
+.email-link:hover { color: var(--link-hover); }
 
 .site-footer {
   padding-block: 1.2rem 1.7rem;
@@ -399,4 +401,55 @@ h1 .highlight { color: var(--green); }
 
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { scroll-behavior: auto !important; transition-duration: 0.01ms !important; }
+}
+
+/* A brighter palette with the same green visual identity. */
+:root[data-theme="light"] {
+  color-scheme: light;
+  --page: #f5f7ef;
+  --surface: #ffffff;
+  --surface-light: #e8efdf;
+  --text: #202b21;
+  --muted: #52614e;
+  --green: #38651d;
+  --green-dark: #ffffff;
+  --line: rgba(39, 65, 29, 0.2);
+  --accent-hover: #2c5216;
+  --link-hover: #254711;
+}
+
+.theme-toggle {
+  flex-shrink: 0;
+  min-height: 44px;
+  padding: 0.55rem 0.9rem;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  background: var(--surface-light);
+  color: var(--green);
+  font: 600 0.85rem 'DM Sans', sans-serif;
+  cursor: pointer;
+}
+.theme-toggle:hover { border-color: var(--green); }
+.theme-toggle[hidden] { display: none; }
+.site-header { gap: 1rem; }
+.site-header .nav-links { margin-left: auto; }
+
+:root[data-theme="light"] .hero-card::before,
+:root[data-theme="light"] .hero-card::after,
+:root[data-theme="light"] .memory-square,
+:root[data-theme="light"] .memory-dialog-card,
+:root[data-theme="light"] .paint-tool,
+:root[data-theme="light"] .paint-action,
+:root[data-theme="light"] .paint-customizer,
+:root[data-theme="light"] .paint-rgb-inputs input,
+:root[data-theme="light"] .paint-hex-input input { border-color: var(--line); }
+:root[data-theme="light"] .empty-state,
+:root[data-theme="light"] .paint-stage { border-color: var(--green); }
+:root[data-theme="light"] .paint-customizer { background: var(--page); }
+:root[data-theme="light"] .memory-dialog { background: rgba(245, 247, 239, 0.9); }
+:root[data-theme="light"] .memory-dialog-card { box-shadow: 0 1.5rem 5rem rgba(39, 65, 29, 0.15); }
+:root[data-theme="light"] .memory-square.is-correct { background: #b8d99b; }
+
+@media (max-width: 760px) {
+  .site-header .nav-links { margin-left: 0; }
 }
