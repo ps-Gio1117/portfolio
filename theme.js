@@ -1,29 +1,46 @@
 (() => {
   const storageKey = 'giovani-portfolio-theme';
   const root = document.documentElement;
-
-  // Apply the saved palette before the stylesheet loads to avoid a theme flash.
+  let theme = 'dark';
   try {
-    if (localStorage.getItem(storageKey) === 'light') root.dataset.theme = 'light';
-  } catch { /* The toggle still works when browser storage is unavailable. */ }
+    if (localStorage.getItem(storageKey) === 'light') theme = 'light';
+  } catch { /* Appearance still works without browser storage. */ }
+  root.setAttribute('data-theme', theme);
 
-  document.addEventListener('DOMContentLoaded', () => {
-    const toggle = document.querySelector('.theme-toggle');
-    if (!toggle) return;
+  function initialize() {
+    const settings = document.querySelector('.theme-settings');
+    if (!settings) return;
+    const choices = settings.querySelectorAll('[data-theme-choice]');
+    const summary = settings.querySelector('summary');
 
-    function updateToggle() {
-      const light = root.dataset.theme === 'light';
-      toggle.textContent = light ? 'Dark mode' : 'Light mode';
-      toggle.setAttribute('aria-label', 'Switch to ' + (light ? 'dark' : 'light') + ' mode');
+    function applyTheme(nextTheme) {
+      theme = nextTheme;
+      root.setAttribute('data-theme', theme);
+      choices.forEach(button => {
+        button.setAttribute('aria-pressed', String(button.dataset.themeChoice === theme));
+      });
     }
 
-    toggle.addEventListener('click', () => {
-      const theme = root.dataset.theme === 'light' ? 'dark' : 'light';
-      root.dataset.theme = theme;
+    choices.forEach(button => button.addEventListener('click', () => {
+      applyTheme(button.dataset.themeChoice);
       try { localStorage.setItem(storageKey, theme); } catch { /* Keep the choice for this page. */ }
-      updateToggle();
+    }));
+    document.addEventListener('click', event => {
+      if (!settings.contains(event.target)) settings.open = false;
     });
-    updateToggle();
-    toggle.hidden = false;
-  });
+    settings.addEventListener('keydown', event => {
+      if (event.key === 'Escape') {
+        settings.open = false;
+        summary.focus();
+      }
+    });
+    applyTheme(theme);
+    settings.hidden = false;
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initialize);
+  } else {
+    initialize();
+  }
 })();
