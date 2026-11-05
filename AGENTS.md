@@ -17,9 +17,18 @@ This repository is currently a minimal portfolio project containing only `README
 - Make content easy to scan and use clear headings and concise descriptions.
 - Use semantic structure and accessible language. For web content, provide useful alternative text for meaningful images and ensure links describe their destination.
 - Keep visual and technical choices consistent across pages as the project grows.
+- Make a dark and light mode function. Light mode will be white bg with black text while Dark Mode will be black bg with white text. 
+- The font used will be "Helvetica"
+- The style will be simplistic with some 
 
 ## Verification
 
 - First inspect the files and available scripts relevant to the change.
 - Use the repository's documented commands when available; do not assume a command exists if there is no project configuration for it.
 - For content-only edits, review the changed text and links for accuracy and consistency.
+
+## Rules
+- plain HTML, CSS, and JavaScript only, no frameworks, relative file paths.
+
+## Git
+- Git: commit after each task with a clear message, then push to GitHub.
