@@ -360,6 +360,9 @@ h1 .highlight { color: var(--green); }
 .paint-stage { display: grid; place-items: center; margin-top: 1.25rem; padding: clamp(0.5rem, 2vw, 1rem); border: 1px dashed rgba(184, 238, 116, 0.28); border-radius: 1rem; background: var(--surface); }
 #paint-canvas { display: block; width: min(100%, 420px); height: auto; aspect-ratio: 1; border: 1px solid rgba(16, 20, 16, 0.25); border-radius: 0.45rem; background: #fff; touch-action: none; cursor: crosshair; }
 .paint-status { min-height: 1.5em; margin: 0.8rem 0 0; color: var(--muted); font-size: 0.82rem; }
+.paint-surface { position: relative; width: min(100%, 420px); }
+.paint-keyboard-cursor { position: absolute; width: 16px; height: 16px; border: 2px solid #202020; border-radius: 50%; box-shadow: 0 0 0 2px #fff; transform: translate(-50%, -50%); pointer-events: none; }
+.paint-keyboard-cursor.is-drawing { border-style: dashed; }
 
 .email-link { color: var(--green); text-decoration-thickness: 1px; text-underline-offset: 0.25em; }
 .email-link:hover { color: var(--link-hover); }

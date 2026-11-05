@@ -159,10 +159,14 @@
           </div>
         </div>
         <div class="paint-stage">
-          <canvas id="paint-canvas" width="420" height="420" role="img" aria-label="Blank white drawing canvas. Use the selected tool with a mouse or touch.">
-            Your drawing canvas. Use the selected tool with a mouse or touch.
-          </canvas>
+          <div class="paint-surface">
+            <canvas id="paint-canvas" width="420" height="420" tabindex="0" role="application" aria-label="Drawing canvas" aria-describedby="paint-keyboard-help paint-status">
+              Your drawing canvas. Use a mouse, touch, or the keyboard controls described below.
+            </canvas>
+            <span class="paint-keyboard-cursor" id="paint-keyboard-cursor" aria-hidden="true" hidden></span>
+          </div>
         </div>
+        <p class="paint-status" id="paint-keyboard-help">Keyboard: Tab to the canvas. Arrow keys move the cursor; hold Shift to move faster. Space or Enter starts/stops drawing or applies bucket fill. Escape stops drawing. Tab leaves the canvas.</p>
         <p class="paint-status" id="paint-status" aria-live="polite">Brush selected. Drag or touch the canvas to draw.</p>
       </div>
     </section>
@@ -476,6 +480,9 @@
       const resetButton = document.getElementById('paint-reset');
       const jpegDownloadButton = document.getElementById('paint-download-jpeg');
       const status = document.getElementById('paint-status');
+      const keyboardCursor = document.getElementById('paint-keyboard-cursor');
+      const keyboardPoint = { x: canvas.width / 2, y: canvas.height / 2 };
+      let keyboardDrawing = false;
       const history = [];
       const redoHistory = [];
       const maxHistory = 20;
@@ -685,9 +692,65 @@
         }, 'image/jpeg', 0.92);
       }
 
+      function updateKeyboardCursor() {
+        keyboardCursor.style.left = `${keyboardPoint.x / canvas.width * 100}%`;
+        keyboardCursor.style.top = `${keyboardPoint.y / canvas.height * 100}%`;
+        keyboardCursor.classList.toggle('is-drawing', keyboardDrawing);
+      }
+
+      function stopKeyboardDrawing() {
+        if (keyboardDrawing) updateStatus('Drawing stopped.');
+        keyboardDrawing = false;
+        updateKeyboardCursor();
+      }
+
+      canvas.addEventListener('focus', () => {
+        keyboardCursor.hidden = false;
+        updateKeyboardCursor();
+        updateStatus(`Cursor at ${keyboardPoint.x}, ${keyboardPoint.y}. Use arrow keys to move and Space or Enter to paint.`);
+      });
+      canvas.addEventListener('blur', () => {
+        stopKeyboardDrawing();
+        keyboardCursor.hidden = true;
+      });
+      canvas.addEventListener('keydown', event => {
+        if (event.ctrlKey || event.metaKey || event.altKey) return;
+        const directions = { ArrowLeft: [-1, 0], ArrowRight: [1, 0], ArrowUp: [0, -1], ArrowDown: [0, 1] };
+        if (directions[event.key]) {
+          event.preventDefault();
+          if (drawing) return;
+          const from = { ...keyboardPoint };
+          const step = event.shiftKey ? 10 : 2;
+          keyboardPoint.x = Math.max(0, Math.min(canvas.width - 1, from.x + directions[event.key][0] * step));
+          keyboardPoint.y = Math.max(0, Math.min(canvas.height - 1, from.y + directions[event.key][1] * step));
+          if (keyboardDrawing) drawLine(from, keyboardPoint);
+          updateKeyboardCursor();
+          updateStatus(`Cursor at ${keyboardPoint.x}, ${keyboardPoint.y}. ${keyboardDrawing ? 'Drawing.' : 'Drawing stopped.'}`);
+        } else if (event.key === ' ' || event.key === 'Enter') {
+          event.preventDefault();
+          if (event.repeat || drawing) return;
+          if (selectedTool === 'fill') {
+            updateStatus(bucketFill(keyboardPoint) ? 'Area filled.' : 'That area already has the selected color.');
+          } else if (keyboardDrawing) {
+            stopKeyboardDrawing();
+          } else {
+            saveState();
+            keyboardDrawing = true;
+            drawDot(keyboardPoint, selectedTool === 'eraser' ? '#ffffff' : selectedColor);
+            updateKeyboardCursor();
+            updateStatus('Drawing started. Use arrow keys to draw; Space, Enter, or Escape to stop.');
+          }
+        } else if (event.key === 'Escape') {
+          event.preventDefault();
+          stopKeyboardDrawing();
+        }
+      });
+
       canvas.addEventListener('pointerdown', event => {
         if (event.button !== 0 && event.pointerType === 'mouse') return;
         event.preventDefault();
+        stopKeyboardDrawing();
+        keyboardCursor.hidden = true;
         const point = pointFromEvent(event);
         if (selectedTool === 'fill') {
           if (bucketFill(point)) updateStatus('Area filled.');
